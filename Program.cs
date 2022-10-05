@@ -1,15 +1,13 @@
-﻿using ProductManager;
-using Categories;
-using System.Linq;
+﻿using Categories;
+using ProductManager;
 
 namespace ProductManager_2
 {
     static class Program
     {
 
-        public static Dictionary<string, ProductInfo> ProductInformation = new Dictionary<string, ProductInfo>();
 
-        public static List<Category> categories = new List<Category>();
+        //public static List<Category> categories = new List<Category>();
         public static void Main()
         {
             Menu();
@@ -66,72 +64,74 @@ namespace ProductManager_2
                 {
                     case ConsoleKey.D1:
                     case ConsoleKey.NumPad1:
-                        string articleId;
-                        string name;
-                        string description;
-                        int price;
-
-                        Console.Write("Artikelnummer: ");
-                        articleId = (Console.ReadLine());
-
-                        Console.Write("Namn: ");
-                        name = (Console.ReadLine());
-
-                        Console.Write("Beskrivning: ");
-                        description = (Console.ReadLine());
-
-                        Console.Write("Pris: ");
-                        price = int.Parse(Console.ReadLine());
-
-                        Console.Clear();
-
-                        Console.WriteLine("Namn: " + name + "\n" + "Artikelnummer: " + articleId + "\n" + "Beskrivning: " + description + "\n" + "Pris: " + price + "\n Stämmer detta? (J)a (N)ej");
-
-                        ConsoleKey key = Console.ReadKey(true).Key;
-
-                        if (key.Equals(ConsoleKey.J) && ProductInformation.ContainsKey(articleId))
                         {
+                            string articleId;
+                            string name;
+                            string description;
+                            int price;
+
+                            Console.Write("Artikelnummer: ");
+                            articleId = (Console.ReadLine());
+
+                            Console.Write("Namn: ");
+                            name = (Console.ReadLine());
+
+                            Console.Write("Beskrivning: ");
+                            description = (Console.ReadLine());
+
+                            Console.Write("Pris: ");
+                            price = int.Parse(Console.ReadLine());
+
                             Console.Clear();
-                            Console.WriteLine("En produkt med samma artikelnummer är redan registerad!");
-                            Thread.Sleep(2000);
-                            break;
-                        }
-                        else if (key.Equals(ConsoleKey.N))
-                        {
-                            Console.Clear();
-                            Thread.Sleep(2000);
-                            break;
-                        }
-                        else if (!pInfo.Equals(pInfo.name) && key.Equals(ConsoleKey.J))
-                        {
 
+                            Console.WriteLine("Namn: " + name + "\n" + "Artikelnummer: " + articleId + "\n" + "Beskrivning: " + description + "\n" + "Pris: " + price + "\n Stämmer detta? (J)a (N)ej");
 
-                            ProductInformation.Add(articleId, new ProductInfo()
+                            ConsoleKey key = Console.ReadKey(true).Key;
+
+                            if (key.Equals(ConsoleKey.J) && Category.ProductInformation.ContainsKey(articleId))
                             {
-                                name = name,
-                                articleNumber = articleId,
-                                description = description,
-                                price = price
-                            });
-                            ProductInformation.Add(name, new ProductInfo()
+                                Console.Clear();
+                                Console.WriteLine("En produkt med samma artikelnummer är redan registerad!");
+                                Thread.Sleep(2000);
+                                break;
+                            }
+                            else if (key.Equals(ConsoleKey.N))
                             {
-                                articleNumber = articleId,
-                                name = name,
-                                description = description,
-                                price = price
-                            });
+                                Console.Clear();
+                                Thread.Sleep(2000);
+                                break;
+                            }
+                            else if (!pInfo.Equals(pInfo.name) && key.Equals(ConsoleKey.J))
+                            {
+
+
+                                Category.ProductInformation.Add(articleId, new ProductInfo()
+                                {
+                                    name = name,
+                                    articleNumber = articleId,
+                                    description = description,
+                                    price = price
+                                });
+                                Category.ProductInformation.Add(name, new ProductInfo()
+                                {
+                                    articleNumber = articleId,
+                                    name = name,
+                                    description = description,
+                                    price = price
+                                });
 
 
 
-                            Console.Clear();
-                            Console.WriteLine("Produkten Registerat!");
-                            Thread.Sleep(2000);
-                            Console.Clear();
+                                Console.Clear();
+                                Console.WriteLine("Produkten Registerat!");
+                                Thread.Sleep(2000);
+                                Console.Clear();
 
-                        }
+                            }
 
 
-                        break;
+                            break;
+                        } 
 
                     case ConsoleKey.D2:
                     case ConsoleKey.NumPad2:
@@ -151,10 +151,59 @@ namespace ProductManager_2
 
                     case ConsoleKey.D4:
                     case ConsoleKey.NumPad4:
+                        {
+                            Console.WriteLine("Ange utbildning: ");
 
-                        applicationRunning = false;
+                            string name = Console.ReadLine();
 
-                        break;
+                            Console.Clear();
+
+                            //var category = categories.FirstOrDefault(category => category.Name == name);
+                            if (Category.categories.Any())
+                            {
+                                Console.Write("Ange produktens artikelnummer eller namn: ");
+                                string article = Console.ReadLine();
+
+                                var searched = Category.ProductInformation.Where(product => product.Key.Equals(article));
+
+                                if (searched.Any())
+                                {
+                                    ProductInfo productInformation = Category.ProductInformation[article];
+
+                                    PrintProduct(productInformation);
+
+                                    Console.WriteLine("Produkten tillagd i kategorien!");
+                                    Thread.Sleep(2000);
+
+                                }
+                                else
+                                {
+                                    Console.WriteLine("Produkten hittades inte!");
+                                    Thread.Sleep(2000);
+                                    Console.Clear();
+
+                                }
+                                //ProductInfo product = new ProductInfo(article);
+                                var category = new Category(name);
+                                category.Name = name;
+                                Category.categories.Add(category);
+                                //Category.ProductInformation.Add(article, new ProductInfo()
+                                //{
+                                //    name = name
+                                //});
+
+                               
+                            }
+                            else
+                            {
+                                Console.WriteLine("Utbildningen finns ej");
+                                Thread.Sleep(2000);
+                            }
+
+
+                            break;
+                        }
+
 
                     case ConsoleKey.D5:
                     case ConsoleKey.NumPad5:
@@ -187,11 +236,11 @@ namespace ProductManager_2
                 Console.Write("Ange produktens artikelnummer eller namn: ");
                 string article = Console.ReadLine();
 
-                var searched = ProductInformation.Where(product => product.Key.Equals(article));
+                var searched = Category.ProductInformation.Where(product => product.Key.Equals(article));
 
                 if (searched.Any())
                 {
-                    ProductInfo productInformation = ProductInformation[article];
+                    ProductInfo productInformation = Category.ProductInformation[article];
 
                     PrintProduct(productInformation);
 

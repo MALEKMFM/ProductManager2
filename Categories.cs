@@ -1,4 +1,4 @@
-﻿using System.Xml.Linq;
+﻿using ProductManager;
 
 namespace Categories
 {
@@ -6,6 +6,8 @@ namespace Categories
     public class Category
     {
         public static List<Category> categories = new List<Category>();
+        public static Dictionary<string, ProductInfo> ProductInformation { get; } = new Dictionary<string, ProductInfo>();
+
         public Category(string name)
         {
 
@@ -13,6 +15,7 @@ namespace Categories
 
         }
 
+        
         public string Name
         {
             get
@@ -24,7 +27,7 @@ namespace Categories
             {
                 // Guard Clause
                 if (string.IsNullOrEmpty(value))
-                    throw new ArgumentException("Namnet kan inte vara tomt");
+                    throw new ArgumentException("Invalid Name");
 
                 name = value;
             }
