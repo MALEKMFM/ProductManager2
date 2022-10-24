@@ -1,11 +1,9 @@
 ﻿using Categories;
 using ProductManager;
-using System.Net.WebSockets;
-using System.Xml.Linq;
 
 namespace ProductManager_2
 {
-   public class Program
+    public class Program
     {
         public static Dictionary<string, Product> ProductInformation = new Dictionary<string, Product>();
         public static List<Category> categories = new List<Category>();
@@ -15,12 +13,11 @@ namespace ProductManager_2
             Program menu = new Program();
             menu.Menu();
         }
-
         public void Menu()
         {
             Console.CursorVisible = false;
             bool applicationRunning = true;
-   
+
             do
             {
                 Console.WriteLine("Välkommen till FreakyFashion \nvälj ett alternativ nedan!" + "\n");
@@ -133,7 +130,6 @@ namespace ProductManager_2
                     case ConsoleKey.D3:
                     case ConsoleKey.NumPad3:
 
-                        //Category.CategoryCheck();
                         string catName;
 
                         Console.WriteLine("Ny Kategori\n");
@@ -145,12 +141,9 @@ namespace ProductManager_2
                         Console.WriteLine("Namn: " + catName + "\n Stämmer detta? (J)a (N)ej");
                         key = Console.ReadKey(true).Key;
 
-                        //key = Console.ReadKey(true).Key;
-
                         var categorieExist = categories.FirstOrDefault(x => x.Name == catName);
                         Category category = new Category(catName);
 
-                        // Any()  eller FirstOrDefault()
                         if (key.Equals(ConsoleKey.J) && categorieExist != null)
                         {
                             Console.Clear();
@@ -168,7 +161,7 @@ namespace ProductManager_2
                         else
                         {
                             categories.Add(category);
-                            //AddCategoryToProductDictionary(category, new ProductInfo());
+
                             Console.Clear();
                             Console.WriteLine("Kategorien Registerat!");
                             Thread.Sleep(2000);
@@ -179,7 +172,7 @@ namespace ProductManager_2
 
                     case ConsoleKey.D4:
                     case ConsoleKey.NumPad4:
-                       
+
                         AddProductToCategory();
 
                         break;
@@ -187,7 +180,7 @@ namespace ProductManager_2
                     case ConsoleKey.D5:
                     case ConsoleKey.NumPad5:
                         static Category? FindCategory(string category)
-=>                      categories.FirstOrDefault(x => x.Name == category);
+=> categories.FirstOrDefault(x => x.Name == category);
                         string categoryy;
                         categoryy = (Console.ReadLine());
 
@@ -235,12 +228,10 @@ namespace ProductManager_2
                 }
             }
         }
-
         static Product? FindProduct(string articleNumber)
             => ProductInformation.ContainsKey(articleNumber)
                 ? ProductInformation[articleNumber]
                 : null;
-
         public void AddProductToCategory()
         {
             string categoryName;
@@ -255,17 +246,26 @@ namespace ProductManager_2
 
             static Category? FindCategory(string category)
              => categories.FirstOrDefault(x => x.Name == category);
-          
+
             Console.WriteLine("Ange Kategorie: ");
             if (productExist)
             {
                 categoryName = Console.ReadLine();
                 var category1 = new List<Category>(categories);
                 var categoryExist = FindCategory(categoryName);
-
+                var productExistInCategoryInCategory = categoryExist.ProductDictionary.Any(x => x.Key == product.ArticleNumber);
                 if (categoryExist != null)
                 {
-                    categoryExist.AddProduct(product, categoryExist);
+                    try
+                    {
+                        categoryExist.AddProduct(product, categoryExist);
+                    }
+                    catch (ArgumentException)
+                    {
+                        Console.WriteLine("Produkten finns redan");
+                        Thread.Sleep(2000);
+                        throw;
+                    }
                 }
                 else if (categoryExist == null)
                 {

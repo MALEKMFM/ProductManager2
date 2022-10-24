@@ -30,42 +30,33 @@ namespace Categories
 
         private string name;
 
-        public void AddProduct(Product product1, Category category/* List<Product> product*/)
+        public void AddProduct(Product product1, Category category)
         {
-            //var category = new Category(product1.Name);
 
-            var productExistInCategory = /*category.*/ProductDictionary.Any(x => x.Key == product1.ArticleNumber);
-      
-            if (!productExistInCategory)
+            var addPToCat = new Program();
+            var productExistInCategory = ProductDictionary.Any(x => x.Key == product1.ArticleNumber);
+
+            if (productExistInCategory)
+            {
+                throw new ArgumentException();
+            }
+
+            else if (!productExistInCategory)
             {
 
                 Console.WriteLine("Produkten tillagd i kategorien!");
                 Thread.Sleep(2000);
                 Console.Clear();
-                /*category.*/ProductDictionary.Add(product1.ArticleNumber, category.Name /*product*/);
+                ProductDictionary.Add(product1.ArticleNumber, category.Name);
             }
-            try
-            {
-                if (productExistInCategory)
-                    /*category.*/ProductDictionary.Add(product1.ArticleNumber, category.Name);
-            }
-            catch
-            {
-                Console.WriteLine("Produkten finns redan");
-                throw new ArgumentException("Produkten finns redan");
-                Thread.Sleep(2000);
-            }
-
         }
         public void ShowCategory()
         {
-            
             foreach (var c in Program.categories)
                 Console.WriteLine(ProductDictionary[c.Name].Count());
 
             Console.ReadKey(true);
             ConsoleKey key = ConsoleKey.Escape;
         }
-        public List<Category> Categoryy { get; set; }
     }
 }
